@@ -1,17 +1,17 @@
 ; Kenttien järjestys tiedostossa
 ;a_id	|ainesosan nimi
-1	|mikropitsa
-2	|makaroni
-3	|jauheliha
-4	|suola
-5	|tomaattimurska
-6	|yrttivoipatonki
-7	|maito
-8	|hiiva
-9	|vehnäjauho
-10	|voi
-11	|juustoraaste
-12	|ketsuppi
-13	|sinappi
-14	|nakki
-15	|kananmuna
+1	|maito
+2	|hiiva
+3	|suola
+4	|vehnäjauho
+5	|voi
+6	|juustoraaste
+7	|ketsuppi
+8	|sinappi
+9	|nakki
+10	|kananmuna
+11	|makaroni
+12	|jauheliha
+13	|tomaattimurska
+14	|yrttivoipatonki
+15	|mikropitsa

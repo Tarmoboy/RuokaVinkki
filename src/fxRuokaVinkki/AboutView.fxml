@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-base: #9aa0ac; -fx-background-color: linear-gradient(to top,  #9aa0ac 15%,  #cc7a87);" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fi.jyu.mit.fxgui.ModalController">
+   <center>
+      <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefWidth="333.0" style="-fx-border-width: 0 0 4 0; -fx-border-color: #5f626d;" text="RuokaVinkki" textAlignment="CENTER">
+               <font>
+                  <Font name="Arial" size="48.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="versio 0.1">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+               <padding>
+                  <Insets bottom="20.0" top="40.0" />
+               </padding>
+            </Label>
+            <Label alignment="CENTER" maxWidth="1.7976931348623157E308" text="© 2023 Tarmo Ilves">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+               <padding>
+                  <Insets bottom="70.0" />
+               </padding>
+            </Label>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

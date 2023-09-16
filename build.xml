@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project ruokavinkki">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <!--define folder properties-->
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.workspace" value="C:/Users/tarmo/eclipse-workspace"/>
+    <property name="dir.jarfile" value="${dir.buildfile}"/>
+    <target name="create_run_jar">
+        <jar destfile="${dir.jarfile}/ruokavinkki.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="fxRuokaVinkki.RuokaVinkkiMain"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${dir.jarfile}/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/tarmo/Documents/ohj2/apukirjastot/Ali.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/tarmo/Documents/ohj2/apukirjastot/fxgui.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/tarmo/Documents/ohj2/apukirjastot/Graphics.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/tarmo/Documents/ohj2/apukirjastot/Music.jar"/>
+        </jar>
+    </target>
+</project>
