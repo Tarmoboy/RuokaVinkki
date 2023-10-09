@@ -20,26 +20,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-base: #9aa0ac;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRuokaVinkki.RuokaVinkkiGUIController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" style="-fx-base: #9aa0ac;" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRuokaVinkki.RuokaVinkkiGUIController">
    <top>
       <MenuBar style="-fx-base: #cc7a87; -fx-font-size: 16 px; -fx-font-family: Arial;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Tiedosto">
             <items>
-              <MenuItem mnemonicParsing="false" text="Tallenna" />
-                  <MenuItem mnemonicParsing="false" text="Tulosta..." />
-                  <MenuItem mnemonicParsing="false" text="Lopeta" />
+              <MenuItem mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleTulosta" text="Tulosta..." />
+                  <MenuItem mnemonicParsing="false" onAction="#handleLopeta" text="Lopeta" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Muokkaa">
             <items>
-              <MenuItem mnemonicParsing="false" text="Lisää resepti..." />
+              <MenuItem mnemonicParsing="false" onAction="#handleLisaaResepti" text="Lisää resepti..." />
                   <MenuItem mnemonicParsing="false" onAction="#handleMuokkaaReseptia" text="Muokkaa reseptiä..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Apua">
             <items>
-              <MenuItem mnemonicParsing="false" text="Apua..." />
+              <MenuItem mnemonicParsing="false" onAction="#handleApua" text="Apua" />
                   <MenuItem mnemonicParsing="false" onAction="#handleTietoja" text="Tietoja..." />
             </items>
           </Menu>
@@ -57,8 +57,8 @@
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font></Label>
-                        <ComboBoxChooser prefHeight="25.0" prefWidth="9000.0" rivit="ainesosa&#10;reseptin nimi" style="-fx-font-size: 16 px; -fx-font-family: Arial;" />
-                        <TextField>
+                        <ComboBoxChooser fx:id="cbKentta" onAction="#handleHakuehto" prefHeight="25.0" prefWidth="9000.0" rivit="ainesosa&#10;reseptin nimi" style="-fx-font-size: 16 px; -fx-font-family: Arial;" />
+                        <TextField fx:id="hakuehto">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font></TextField>

@@ -2,7 +2,11 @@ package fxRuokaVinkki;
 
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
+import fi.jyu.mit.fxgui.ModalController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.GridPane;
 
 /**
  * @author tarmo
@@ -11,6 +15,15 @@ import javafx.fxml.FXML;
  */
 public class MuokkaaController implements ModalControllerInterface<Object> {
     
+    @FXML
+    private GridPane gridTietue;
+
+    @FXML
+    private Label labelVirhe;
+
+    @FXML
+    private ScrollPane panelTietue;
+    
     /**
      * Reseptin poistamisen dialogi
      */
@@ -18,6 +31,42 @@ public class MuokkaaController implements ModalControllerInterface<Object> {
         Dialogs.showQuestionDialog("Poistetaanko?", "Poistetaanko resepti: Nakki-juustosarvet", "Kyllä", "Ei",
                 dlg -> 
                     dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+    }
+    
+    /**
+     * Uuden ainesosan lisääminen
+     */
+    @FXML
+    void handleLisaaAinesosa() {
+        Dialogs.showMessageDialog("Ei osata vielä lisätä ainesosaa",
+                dlg -> 
+                    dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+    }
+    
+    /**
+     * Ainesosan poistaminen
+     */
+    @FXML
+    void handlePoistaAinesosa() {
+        Dialogs.showMessageDialog("Ei osata vielä poistaa ainesosaa",
+                dlg -> 
+                    dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+    }
+    
+    /**
+     * Poistuminen muokkausikkunasta ilman tallentamista
+     */
+    @FXML
+    void handlePeruuta() {
+        ModalController.closeStage(gridTietue);
+    }
+    
+    /**
+     * Poistuminen muokkausikkunasta tallentaen
+     */
+    @FXML
+    void handleTallenna() {
+        ModalController.closeStage(gridTietue);
     }
     
     /**

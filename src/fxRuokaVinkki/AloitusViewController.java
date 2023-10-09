@@ -13,10 +13,12 @@ import javafx.scene.control.Button;
 public class AloitusViewController implements ModalControllerInterface<String> {
     
     // aloita-nappi
-    @FXML private Button aloita;
+    @FXML 
+    private Button aloita;
     
     // Nappia painettaesa
-    @FXML private void handleAloita() {
+    @FXML 
+    private void handleAloita() {
         handleSulje();
     }
     

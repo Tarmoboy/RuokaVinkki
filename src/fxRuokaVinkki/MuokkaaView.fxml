@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="750.0" prefWidth="500.0" style="-fx-base: #9aa0ac;" stylesheets="@ruokavinkki.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRuokaVinkki.MuokkaaController">
+<BorderPane prefHeight="750.0" prefWidth="500.0" style="-fx-base: #9aa0ac;" stylesheets="@ruokavinkki.css" xmlns="http://javafx.com/javafx/20" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxRuokaVinkki.MuokkaaController">
    <bottom>
       <VBox maxWidth="1000.0" BorderPane.alignment="CENTER">
          <children>
@@ -28,12 +28,12 @@
                <right>
                   <ButtonBar prefHeight="40.0" prefWidth="250.0" BorderPane.alignment="CENTER">
                     <buttons>
-                        <Button cancelButton="true" mnemonicParsing="false" text="Peruuta">
+                        <Button cancelButton="true" mnemonicParsing="false" onAction="#handlePeruuta" text="Peruuta">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font>
                         </Button>
-                        <Button defaultButton="true" mnemonicParsing="false" style="-fx-base: #cc7a87;" text="Tallenna">
+                        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleTallenna" style="-fx-base: #cc7a87;" text="Tallenna">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font>
@@ -106,7 +106,7 @@
                      <right>
                         <VBox alignment="BOTTOM_RIGHT" prefHeight="270.0" prefWidth="150.0" BorderPane.alignment="CENTER">
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="135.0" style="-fx-base: #cc7a87;" text="Lisää ainesosa">
+                              <Button mnemonicParsing="false" onAction="#handleLisaaAinesosa" prefHeight="30.0" prefWidth="135.0" style="-fx-base: #cc7a87;" text="Lisää ainesosa">
                                  <VBox.margin>
                                     <Insets bottom="5.0" />
                                  </VBox.margin>
@@ -114,7 +114,7 @@
                                     <Font name="Arial" size="16.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" text="Poista ainesosa">
+                              <Button mnemonicParsing="false" onAction="#handlePoistaAinesosa" text="Poista ainesosa">
                                  <VBox.margin>
                                     <Insets bottom="10.0" top="5.0" />
                                  </VBox.margin>
@@ -152,7 +152,7 @@
       </ScrollPane>
    </center>
    <top>
-      <Label alignment="CENTER" prefWidth="9000.0" style="-fx-background-color: #cc7a87;" text="Reseptin muokkaaminen" BorderPane.alignment="CENTER">
+      <Label alignment="CENTER" prefWidth="9000.0" text="Reseptin muokkaaminen" BorderPane.alignment="CENTER">
          <font>
             <Font name="Arial" size="16.0" />
          </font>
