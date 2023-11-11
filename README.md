@@ -22,53 +22,53 @@ Ohjelman tiedot tallennetaan seuraavanlaisiin tekstitiedostoihin:
 ```
 ; Kenttien järjestys tiedostossa
 ;r_id   |reseptin nimi |aika |ohje
-1 |Nakki-juustosarvet |1 h 30 min |Liuota hiiva kädenlämpöiseen maitoon. Lisää suola, vehnäjauho, voi ja juustoraaste. Vaivaa tasaiseksi taikinaksi, ja anna kohota. Jaa kohonnut taikina kolmeen palaan. Kauli ne pyöreiksi, halkaisijaltaan 35 cm:n levyiksi. Jaa levyt kahdeksaan osaan. Yhdistä ketsupppi ja sinappi ja mausta seos haluamallasi tavalla. Levitä seos kolmioille ja aseta nakit kolmioiden leveämpään päähän. Kierrä ne sarviksi ja leveästä päästä aloittaen. Voitele sarvet kananmunalla ja paista 225 asteessa noin 15 min. Tarjoa lämpiminä. 
-2 |Makaronimössö |30 min |Keitä makaronit ja paista jauheliha. Mausta jauheliha haluamallasi tavalla ja lisää tomaattimurska ja keitetyt makaronit. Anna ylimääräisen nesteen hieman haihtua ja syö lämpimänä. 
-3 |Yrttivoipatonki |12 min |Laita uuni kuumenemaan 200 asteeseen. Ota yrttipatonki pakastimesta sulamaan. Laita leivinpaperi uunipellille, ja patonki päälle. Paista patonkia uunissa noin 12 min. Syö lämpimänä. 
-4 |Mikropitsa |2 min |Laita mikropitsa mikroon täydelle teholle noin kahdeksi minuutiksi. Syö halutessasi lämpimänä tai toki mahdollista jääkaappikylmänäkin ilman mikrotusta.
+1       |Nakki-juustosarvet |1 h 30 min |Liuota hiiva kädenlämpöiseen maitoon. Lisää suola, vehnäjauho, voi ja juustoraaste. Vaivaa tasaiseksi taikinaksi, ja anna kohota. Jaa kohonnut taikina kolmeen palaan. Kauli ne pyöreiksi, halkaisijaltaan 35 cm:n levyiksi. Jaa levyt kahdeksaan osaan. Yhdistä ketsupppi ja sinappi ja mausta seos haluamallasi tavalla. Levitä seos kolmioille ja aseta nakit kolmioiden leveämpään päähän. Kierrä ne sarviksi ja leveästä päästä aloittaen. Voitele sarvet kananmunalla ja paista 225 asteessa noin 15 min. Tarjoa lämpiminä. 
+2       |Makaronimössö |30 min |Keitä makaronit ja paista jauheliha. Mausta jauheliha haluamallasi tavalla ja lisää tomaattimurska ja keitetyt makaronit. Anna ylimääräisen nesteen hieman haihtua ja syö lämpimänä. 
+3       |Yrttivoipatonki |12 min |Laita uuni kuumenemaan 200 asteeseen. Ota yrttipatonki pakastimesta sulamaan. Laita leivinpaperi uunipellille, ja patonki päälle. Paista patonkia uunissa noin 12 min. Syö lämpimänä. 
+4       |Mikropitsa |2 min |Laita mikropitsa mikroon täydelle teholle noin kahdeksi minuutiksi. Syö halutessasi lämpimänä tai toki mahdollista jääkaappikylmänäkin ilman mikrotusta.
 ```
 
 `data\ainesosat.dat` - ainesosien luettelo
 ```
 ; Kenttien järjestys tiedostossa
-;a_id |ainesosan nimi
-1 |maito
-2 |hiiva
-3 |suola
-4 |vehnäjauho
-5 |voi
-6 |juustoraaste
-7 |ketsuppi
-8 |sinappi
-9 |nakki
-10 |kananmuna
-11 |makaroni
-12 |jauheliha
-13 |tomaattimurska
-14 |yrttivoipatonki
-15 |mikropitsa
+;a_id   |ainesosan nimi
+1       |maito
+2       |hiiva
+3       |suola
+4       |vehnäjauho
+5       |voi
+6       |juustoraaste
+7       |ketsuppi
+8       |sinappi
+9       |nakki
+10      |kananmuna
+11      |makaroni
+12      |jauheliha
+13      |tomaattimurska
+14      |yrttivoipatonki
+15      |mikropitsa
 ```
 
 `data\reseptienainesosat.dat` - ainesosien liittäminen resepteihin relaation avulla
 ```
 ; Kenttien järjestys tiedostossa
-;r_id |a_id |määrä
-1 |1 |2 1/2 dl
-1 |2 |25 g
-1 |3 |1/2 rkl
-1 |4 |6 dl
-1 |5 |50 g
-1 |6 |75 g
-1 |7 |1/2 dl
-1 |8 |1/2 dl
-1 |9 |24 kpl
-1 |10 |1 kpl
-2 |11 |400 g
-2 |12 |400 g
-2 |3 |runsaasti
-2 |13 |400 g
-3 |14 |1 kpl
-4 |15 |1 kpl
+;r_id   |a_id   |määrä
+1       |1      |2 1/2 dl
+1       |2      |25 g
+1       |3      |1/2 rkl
+1       |4      |6 dl
+1       |5      |50 g
+1       |6      |75 g
+1       |7      |1/2 dl
+1       |8      |1/2 dl
+1       |9      |24 kpl
+1       |10     |1 kpl
+2       |11     |400 g
+2       |12     |400 g
+2       |3      |runsaasti
+2       |13     |400 g
+3       |14     |1 kpl
+4       |15     |1 kpl
 ```
 
 # Ohjelman käyttö
