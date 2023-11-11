@@ -78,11 +78,11 @@ Ohjelma käynnistetään klikkaamalla ruokavinkki.jar-ikonia tai antamalla komen
 java -jar ruokavinkki.jar
 ```
 Kun ohjelma käynnistyy, tulostuu näyttöön
-![](%%raw%%kuvat/aloitusview.png)
+![](kuvat/aloitusview.png)
 
 ## Pääikkuna
 Kun ohjelma on käynnistynyt on näkyvillä ohjelman pääikkuna:
-![](%%raw%%kuvat/ruokavinkkiguiview.png)
+![](kuvat/ruokavinkkiguiview.png)
 \
 Pääikkunassa on seuraava menurakenne:
 ```
@@ -98,16 +98,16 @@ Pääikkunan vasemmassa reunassa näkyy Hakuehto.  Tästä
 voi valita haluaako etsiä reseptejä ainesosan vai reseptin nimen perusteella.  Tämän jälkeen
 tekstikenttään voi syöttää hakuehdon ja listaan tulee vain
 ne reseptit joille haku toteutuu. Esimerkiksi jos kirjoitetaan hakuehtoon `suo`, niin haetaan kaikki reseptit joiden ainesosien nimissä on `suo` jossakin kohti.
-![](%%raw%%kuvat/ruokavinkkiguiviewhaku.png)
+![](kuvat/ruokavinkkiguiviewhaku.png)
 Löytyneet reseptit lajitellaan valitun hakukentän perusteella.
 
 ### Muokkaaminen
 Valittua reseptiä voidaan muokata joko painamalla muokkaa reseptiä -painiketta, tai valitsemalla pudotusvalikosta samaisen vaihtoehdon.
-![](%%raw%%kuvat/muokkaaview.png)
+![](kuvat/muokkaaview.png)
 Jos valmistusaika kirjoitetaan väärässä muodossa, tulee tästä ilmoitus:
-![](%%raw%%kuvat/muokkaaviewvirhe.png)
+![](kuvat/muokkaaviewvirhe.png)
 Tarvittaessa reseptin voi tämän ikkunan kautta myös poistaa. Painamalla poista resepti -nappia aukeaa varmistusikkuna ennen poistoa:
-![](%%raw%%kuvat/handlepoistetaanko.png)
+![](kuvat/handlepoistetaanko.png)
 
 ## Menutoiminnot yksityiskohtaisemmin
 ### Tallenna
@@ -131,7 +131,7 @@ Avaa selaimeen tämän ohjesivun.
 ### Tietoja...
 Avaa ikkunan, jossa on mainittu tietoja ohjelmasta, esimerkiksi versio ja tekijä.
 
-![](%%raw%%kuvat/aboutview.png)
+![](kuvat/aboutview.png)
 
 # CRC-kortit
 ## Resepti-luokka (Resepti)
@@ -320,4 +320,4 @@ Tämä tulee käytännössä jakaantumaan useampaan luokkaan
 ```
 
 # Tietorakennekuva
-![](%%raw%%kuvat/tietorakenne.png)
+![](kuvat/tietorakenne.png)
