@@ -5,11 +5,12 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
+import ruokaVinkki.RuokaVinkki;
 
 
 /**
  * @author tarmo
- * @version 8.9.2023
+ * @version 13.11.2023
  *
  */
 public class RuokaVinkkiMain extends Application {
@@ -23,6 +24,8 @@ public class RuokaVinkkiMain extends Application {
             scene.getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("RuokaVinkki");
+            RuokaVinkki ruokaVinkki = new RuokaVinkki();
+            ruokaVinkkiCtrl.setRuokaVinkki(ruokaVinkki);
             primaryStage.show();
             
             // Avataan aloitusikkuna

@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 
 /**
  * @author tarmo
- * @version 8.9.2023
+ * @version 13.11.2023
  *
  */
 public class AloitusViewController implements ModalControllerInterface<String> {
