@@ -96,7 +96,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField editable="false" text="1 h 30 min" GridPane.columnIndex="1">
+                        <TextField fx:id="textAika" editable="false" text="1 h 30 min" GridPane.columnIndex="1">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font>

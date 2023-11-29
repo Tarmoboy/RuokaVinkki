@@ -34,7 +34,7 @@ import ruokaVinkki.SailoException;
 
 /**
  * @author tarmo
- * @version 13.11.2023
+ * @version 29.11.2023
  *
  */
 public class RuokaVinkkiGUIController implements Initializable {
@@ -49,6 +49,8 @@ public class RuokaVinkkiGUIController implements Initializable {
     private ListChooser<Resepti> chooserReseptit;
     @FXML
     private TextArea textOhje;
+    @FXML
+    private TextField textAika;
 
     
     /**
@@ -64,15 +66,16 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     @FXML 
     private void handleTietoja() {
-        // Dialogs.showMessageDialog("Ei osata vielä tietoja");
         ModalController.showModal(RuokaVinkkiGUIController.class.getResource("AboutView.fxml"), "Tietoja", null, "");
     }
     
     /**
      * Avaa aloitusikkunan
+     * @throws SailoException jos tulee virhe
      */
-    public void avaa() {
+    public void avaa() throws SailoException {
         AloitusViewController.kaynnista();
+        lueTiedosto();
     }
     
     /**
@@ -88,6 +91,7 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     @FXML
     private void handleHakuehto() {
+        //hae(0);
         Dialogs.showMessageDialog("Ei osata vielä hakea",
                 dlg -> 
                     dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
@@ -98,28 +102,26 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     @FXML
     private void handleLisaaResepti() {
-//        Dialogs.showMessageDialog("Ei osata vielä lisätä reseptiä",
-//                dlg -> 
-//                    dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
         uusiResepti();
     }
     
     /**
      * Sulkee ohjelman
+     * @throws SailoException jos tallennus ei onnistu
      */
     @FXML
-    private void handleLopeta() {
+    private void handleLopeta() throws SailoException {
+        ruokaVinkki.talleta();
         Platform.exit();
     }
     
     /**
      * Tallentaa tehdyt muokkaukset
+     * @throws SailoException jos tallennus ei onnistu
      */
     @FXML
-    private void handleTallenna() {
-        Dialogs.showMessageDialog("Ei osata vielä tallentaa",
-                dlg -> 
-                    dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+    private void handleTallenna() throws SailoException {
+        ruokaVinkki.talleta();
     }
     
     /**
@@ -158,6 +160,11 @@ public class RuokaVinkkiGUIController implements Initializable {
     private RuokaVinkki ruokaVinkki;
     private Resepti reseptiKohdalla;
     
+    private void lueTiedosto() throws SailoException {
+        ruokaVinkki.lueTiedosto();
+        hae(0);
+    }
+    
     /**
      * Tekee tarvittavat muut alustukset, tulostetaan reseptin tiedot 
      * ohje-kenttään ja alustetaan myös reseptilistan kuuntelija
@@ -170,12 +177,14 @@ public class RuokaVinkkiGUIController implements Initializable {
     }
     
     /**
-     * Näyttää listasta valitun reseptin tiedot, tilapäisesti yhteen isoon edit-kenttään
+     * Näyttää listasta valitun reseptin tiedot
      */
     protected void naytaResepti() {
         reseptiKohdalla = chooserReseptit.getSelectedObject();
         if (reseptiKohdalla == null) return;
         textOhje.setText("");
+        tableResepti.clear();
+        tulosta();
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(textOhje)) {
             tulosta(os, reseptiKohdalla);  
         }
@@ -187,6 +196,7 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     protected void hae(int reseptiId) {
         chooserReseptit.clear();
+        tableResepti.clear();
         int index = 0;
         for (int i = 0; i < ruokaVinkki.getResepteja(); i++) {
             Resepti resepti = ruokaVinkki.annaResepti(i);
@@ -229,10 +239,32 @@ public class RuokaVinkkiGUIController implements Initializable {
     
     /**
      * Tulostaa reseptin tiedot
+     */
+    private void tulosta() {
+        tableResepti.clear();
+        textAika.setText(reseptiKohdalla.getAika());
+        //textOhje.setText(reseptiKohdalla.getOhje().replaceAll("_", "\n"));
+        for (int i = 0; i < ruokaVinkki.getReseptienAinesosia(); i++) {
+            ReseptinAinesosa reseptinAinesosa = ruokaVinkki.annaReseptinAinesosa(i);
+            // Jos reseptin id täsmää, siirrytään eteenpäin
+            if (reseptiKohdalla.getReseptiId() == reseptinAinesosa.getReseptiId()) {
+                Ainesosa ainesosa = ruokaVinkki.annaAinesosa(reseptinAinesosa.getAinesosaId());
+                // Jos myös ainesosan id täsmää, lisätään taulukkoon
+                if (reseptinAinesosa.getAinesosaId() == ainesosa.getAinesosaId()) {
+                   tableResepti.add(ainesosa.getNimi(), reseptinAinesosa.getMaara());
+                }
+            }
+        }
+    }
+    
+    /**
+     * Tulostaa reseptin tiedot väliaikaisesti ohjekenttään
      * @param os tietovirta johon tulostetaan
      * @param resepti tulostettava resepti
      */
     public void tulosta(PrintStream os, final Resepti resepti) {
+        textAika.setText(resepti.getAika());
+        
         os.println("----------------------------------------------");
         resepti.tulosta(os);
         os.println("----------------------------------------------");

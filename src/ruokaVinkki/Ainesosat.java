@@ -1,16 +1,22 @@
 package ruokaVinkki;
 
 import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Luokka ainesosille
  * @author tarmo
- * @version 11.11.2023
+ * @version 29.11.2023
  *
  */
 public class Ainesosat {
-    private String tiedostonNimi = "";
-    private final ArrayList<Ainesosa> alkiot = new ArrayList<Ainesosa>();
+    private static String tiedostonSijainti = "data/ainesosat.dat";
+    private ArrayList<Ainesosa> alkiot = new ArrayList<Ainesosa>();
+    private static boolean muutettu = false;
     
     /**
      * Tyhjä muodostaja
@@ -32,26 +38,63 @@ public class Ainesosat {
      */
     public void lisaa(Ainesosa ainesosa) {
         alkiot.add(ainesosa);
+        muutettu = true;
+    }
+    
+    /**
+     * Poistaa ainesosan tietorakenteesta
+     * @param ainesosa poistettava ainesosa
+     */
+    public void poista(Ainesosa ainesosa) {
+        alkiot.remove(ainesosa);
+        muutettu = true;
     }
     
     /**
      * Lukee ainesosat tiedostosta
-     * TODO toteuttamatta
-     * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedostonNimi = hakemisto + "/reseptit.dat";
-        throw new SailoException("Ei osata lukea tiedostoa " + tiedostonNimi);
+    public void lueTiedosto() throws SailoException {
+        File tiedosto = new File(tiedostonSijainti);
+        try (Scanner fi = new Scanner(new FileInputStream(tiedosto))) {
+            String rivi = null;
+            while (fi.hasNext()) {
+                rivi = fi.nextLine();
+                rivi = rivi.trim();
+                if ("".equals(rivi)) {
+                    continue;
+                }
+                Ainesosa ainesosa = new Ainesosa();
+                ainesosa.parse(rivi);
+                lisaa(ainesosa);
+            }
+        } catch (FileNotFoundException e) {
+            throw new SailoException("Tiedosto " + tiedostonSijainti + " ei aukea");
+        } 
     }
 
     /**
      * Tallentaa ainesosat tiedostoon
-     * TODO toteuttamatta
      * @throws SailoException jos talletus epäonnistuu
      */
     public void talleta() throws SailoException {
-        throw new SailoException("Ei osata tallettaa tiedostoa " + tiedostonNimi);
+        // Jos ei muutoksia, palataan suoraan
+        if (!muutettu) {
+            return;
+        }
+        File tiedosto = new File(tiedostonSijainti);
+        try (PrintStream fi = new PrintStream((tiedosto.getCanonicalPath()))) {
+            for (int i = 0; i< alkiot.size(); i++) {
+                Ainesosa ainesosa = alkiot.get(i);
+                fi.println(ainesosa.toString());
+            }
+        } catch (FileNotFoundException ex) {
+            throw new SailoException("Tiedosto " + tiedostonSijainti + " ei aukea");
+        } catch (IOException ex) {
+            throw new SailoException("Tiedoston " + tiedostonSijainti + " kirjoittamisessa ongelmia");
+        }
+        // muutettu takaisin falseksi, kun on tallennettu
+        muutettu = false;
     }
     
     /**

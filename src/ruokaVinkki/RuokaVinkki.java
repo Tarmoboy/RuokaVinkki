@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * RuokaVinkki-luokka, huolehtii resepteistä
  * @author tarmo
- * @version 11.11.2023
+ * @version 29.11.2023
  *
  */
 public class RuokaVinkki {
@@ -71,6 +71,19 @@ public class RuokaVinkki {
     }
     
     /**
+     * Poistaa reseptin ja siihen linkitetyt ainesosarivit
+     * @param resepti poistettava resepti
+     */
+    public void poista(Resepti resepti) {
+        // Jos resepti tyhjä, ei tehdä mitään
+        if (resepti == null) {
+            return;
+        }
+        reseptienAinesosat.poista(resepti);
+        reseptit.poista(resepti);
+    }
+    
+    /**
      * Palauttaa i:n reseptin
      * @param i monesko resepti palautetaan
      * @return viite i:teen reseptiin
@@ -82,12 +95,22 @@ public class RuokaVinkki {
     
     /**
      * Palauttaa i:n ainesosan
-     * @param i moneski ainesosa palautetaan
+     * @param i monesko ainesosa palautetaan
      * @return viite i:teen ainesosaan
      * @throws IndexOutOfBoundsException jos i väärin
      */
     public Ainesosa annaAinesosa(int i) throws IndexOutOfBoundsException {
         return ainesosat.annaAinesosa(i);
+    }
+    
+    /**
+     * Palauttaa i:n reseptin ainesosan
+     * @param i monesko reseptin ainesosa palautetaan
+     * @return viite i:teen reseptin ainesosaan
+     * @throws IndexOutOfBoundsException jos i väärin
+     */
+    public ReseptinAinesosa annaReseptinAinesosa(int i) throws IndexOutOfBoundsException {
+        return reseptienAinesosat.anna(i);
     }
     
     /**
@@ -132,13 +155,12 @@ public class RuokaVinkki {
     
     /**
      * Hakee reseptit, ainesosat ja reseptien ainesosat hakemistosta
-     * @param hakemisto käytettävä hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        reseptit.lueTiedostosta(hakemisto);
-        ainesosat.lueTiedostosta(hakemisto);
-        reseptienAinesosat.lueTiedostosta(hakemisto);
+    public void lueTiedosto() throws SailoException {
+        reseptit.lueTiedosto();
+        ainesosat.lueTiedosto();
+        reseptienAinesosat.lueTiedosto();
     }
     
     /**
@@ -146,9 +168,25 @@ public class RuokaVinkki {
      * @throws SailoException jos tallettamisessa ongelmia
      */
     public void talleta() throws SailoException {
-        reseptit.talleta();
-        ainesosat.talleta();
-        reseptienAinesosat.talleta();
+        String virhe = "";
+        try {
+            reseptit.talleta();
+        } catch (SailoException ex) {
+            virhe = ex.getMessage();
+        }
+        try {
+            ainesosat.talleta();
+        } catch (SailoException ex) {
+        virhe = ex.getMessage();
+        }
+        try {
+            reseptienAinesosat.talleta();
+        } catch (SailoException ex) {
+            virhe = ex.getMessage();
+        }
+        if ( !"".equals(virhe) ) {
+            throw new SailoException(virhe);
+        }
     }
     
     /**

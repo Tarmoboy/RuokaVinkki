@@ -1,18 +1,20 @@
 package ruokaVinkki;
 
 import java.util.*;
+import java.io.*;
 
 /**
  * Luokka reseptien ainesosille
  * @author tarmo
- * @version 11.11.2023
+ * @version 29.11.2023
  * 
  */
 public class ReseptienAinesosat {
-    private static final int MAX_RESEPTIENAINESOSIA = 5;
+    private static int MAX_RESEPTIENAINESOSIA = 5;
     private int lkm = 0;
-    private String tiedostonNimi = "";
+    private static String tiedostonSijainti = "data/reseptienainesosat.dat";
     private ReseptinAinesosa[] alkiot = new ReseptinAinesosa[MAX_RESEPTIENAINESOSIA];
+    private boolean muutettu = false;
     
     /**
      * Tyhjä muodostaja
@@ -47,13 +49,43 @@ public class ReseptienAinesosat {
      *  reseptienAinesosat.lisaa(maito); reseptienAinesosat.getLkm() === 3;
      *  reseptienAinesosat.lisaa(maito); reseptienAinesosat.getLkm() === 4;
      *  reseptienAinesosat.lisaa(maito); reseptienAinesosat.getLkm() === 5;
-     *  reseptienAinesosat.lisaa(maito); #THROWS SailoException
+     *  reseptienAinesosat.lisaa(maito); 
      * </pre>
      */
     public void lisaa(ReseptinAinesosa reseptinAinesosa) throws SailoException {
-        if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+        if (lkm >= alkiot.length) {
+            MAX_RESEPTIENAINESOSIA = MAX_RESEPTIENAINESOSIA + 5;
+            ReseptienAinesosat uusi = new ReseptienAinesosat();
+            for (int i = 0; i < alkiot.length; i++) {
+                uusi.alkiot[i]=this.alkiot[i];
+            }
+            this.alkiot = uusi.alkiot;
+        }
         alkiot[lkm] = reseptinAinesosa;
         lkm++;
+        muutettu = true;
+    }
+    
+    /**
+     * Poistaa reseptin ainesosat tietorakenteesta
+     * @param resepti poistettaviin ainesosiin liittyvä resepti
+     */
+    public void poista(Resepti resepti) {
+        // Uusi lista, joka yhtä pienempi
+        ReseptinAinesosa[] uusi = new ReseptinAinesosa[alkiot.length-1];
+        int j = 0;
+        for (int i = 0; i < alkiot.length; i++) {
+            int id = alkiot[i].getReseptiId();
+            // Poistettavan reseptin ainesosan tullessa kohdalle ei lisätä uuteen listaan
+            if (id == resepti.getReseptiId()) {
+                lkm--;
+                continue;
+            }
+            uusi[j] = alkiot[i];
+            j++;
+        }
+        this.alkiot = uusi;
+        muutettu = true;
     }
     
     /**
@@ -110,22 +142,53 @@ public class ReseptienAinesosat {
     
     /**
      * Lukee reseptien ainesosat tiedostosta
-     * TODO toteuttamatta
-     * @param hakemisto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedostonNimi = hakemisto + "/reseptienainesosat.dat";
-        throw new SailoException("Ei osata lukea tiedostoa " + tiedostonNimi);
+    public void lueTiedosto() throws SailoException {
+        File tiedosto = new File(tiedostonSijainti);
+        try (Scanner fi = new Scanner(new FileInputStream(tiedosto))) {
+            String rivi = null;
+            while (fi.hasNext()) {
+                rivi = fi.nextLine();
+                rivi = rivi.trim();
+                if ("".equals(rivi)) {
+                    continue;
+                }
+                ReseptinAinesosa reseptinAinesosa = new ReseptinAinesosa();
+                reseptinAinesosa.parse(rivi);
+                try {
+                    lisaa(reseptinAinesosa);
+                } catch (SailoException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch ( FileNotFoundException e ) {
+            throw new SailoException("Tiedosto " + tiedostonSijainti + " ei aukea");
+        } 
     }
 
     /**
      * Tallentaa reseptien ainesosat tiedostoon
-     * TODO toteuttamatta
      * @throws SailoException jos talletus epäonnistuu
      */
     public void talleta() throws SailoException {
-        throw new SailoException("Ei osata tallettaa tiedostoa " + tiedostonNimi);
+        // Jos ei muutoksia, palataan
+        if (!muutettu) {
+            return;
+        }
+        File tiedosto = new File(tiedostonSijainti);
+        try (PrintStream file = new PrintStream((tiedosto.getCanonicalPath()))) {
+            for (int i = 0; i < this.getLkm(); i++) {
+                ReseptinAinesosa reseptinAinesosa = anna(i);
+                file.println(reseptinAinesosa.toString());
+            }
+        } catch ( FileNotFoundException ex ) {
+            throw new SailoException("Tiedosto " + tiedostonSijainti + " ei aukea");
+        } catch ( IOException ex ) {
+            throw new SailoException("Tiedoston " + tiedostonSijainti + " kirjoittamisessa ongelmia");
+        }
+        // muutettu takaisin falseksi tallentamisen jälkeen
+        muutettu=false;
     }
     
     /**

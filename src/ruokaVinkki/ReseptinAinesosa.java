@@ -1,11 +1,12 @@
 package ruokaVinkki;
 
 import java.io.*;
+import fi.jyu.mit.ohj2.Mjonot;
 
 /**
  * Luokka yksittäisen reseptin yksittäiselle ainesosalle
  * @author tarmo
- * @version 11.11.2023
+ * @version 29.11.2023
  * 
  */
 public class ReseptinAinesosa {
@@ -28,10 +29,45 @@ public class ReseptinAinesosa {
     
     /**
      * @return ainesosan id
-     * </pre>
      */
     public int getAinesosaId() {
         return ainesosaId;
+    }
+    
+    /**
+     * @return ainesosan määrä reseptissä
+     */
+    public String getMaara() {
+        return maara;
+    }
+    
+    /**
+     * Palauttaa reseptin tiedot tiedostoon tallennettavaksi.
+     * @return resepti tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   ReseptinAinesosa maito = new ReseptinAinesosa();
+     *   maito.parse("1|1|2 1/2 dl");
+     *   maito.toString().startsWith("1|1|2 1/2 dl") === true;
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" + getReseptiId() + "|" + 
+                    getAinesosaId() + "|" + 
+                    getMaara();
+    }
+    
+    /**
+     * Selvittää reseptin ainesosan tiedot tolppaerotellusta merkkijonosta
+     * @param rivi jota käsitellään
+     * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuilder sb = new StringBuilder(rivi);
+        reseptiId = Mjonot.erota(sb, '|', reseptiId);
+        ainesosaId = Mjonot.erota(sb, '|', ainesosaId);
+        maara = Mjonot.erota(sb, '|', maara);
     }
     
     /**

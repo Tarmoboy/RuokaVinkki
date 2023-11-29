@@ -1,11 +1,14 @@
 package ruokaVinkki;
 
 import java.io.*;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import fi.jyu.mit.ohj2.Mjonot;
 
 /**
  * Luokka yksittäiselle reseptille
  * @author tarmo
- * @version 11.11.2023
+ * @version 29.11.2023
  *
  */
 public class Resepti {
@@ -26,13 +29,29 @@ public class Resepti {
      * @return reseptin nimi
      * @example
      * <pre name="test">
-     *   Resepti mikropitsa = new Resepti();
-     *   mikropitsa.testiResepti();
-     *   mikropitsa.getNimi() === "Mikropitsa";
+     *   Resepti nakkijuustosarvet = new Resepti();
+     *   nakkijuustosarvet.testiResepti();
+     *   nakkijuustosarvet.getNimi() === "Nakki-juustosarvet";
      * </pre>
      */
     public String getNimi() {
         return reseptiNimi;
+    }
+    
+    /**
+     * @return reseptiin tarvittava aika
+     * </pre>
+     */
+    public String getAika() {
+        return reseptiAika;
+    }
+    
+    /**
+     * @return reseptin ohje
+     * </pre>
+     */
+    public String getOhje() {
+        return reseptiOhje;
     }
     
     /**
@@ -53,6 +72,76 @@ public class Resepti {
     public int rekisteroi() {
         reseptiId = seuraavaId;
         seuraavaId++;
+        return reseptiId;
+    }
+    
+    /**
+     * Asettaa reseptille id:n ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param id asetettava tunnusnumero
+     */
+    private void setReseptiId(int id) {
+        reseptiId = id;
+        if (reseptiId >= seuraavaId) seuraavaId = reseptiId + 1;
+    }
+    
+    /**
+     * Palauttaa reseptin tiedot merkkijonona tiedostoon tallentamiseksi
+     * @return resepti tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Resepti mikropitsa = new Resepti();
+     *   mikropitsa.parse("1|Mikropitsa|2 min| Laita mikropitsa mikroon.");
+     *   mikropitsa.toString().startsWith("1|Mikropitsa|2 min") === true;
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" + getReseptiId() + "|" + 
+                    getNimi() + "|" + 
+                    getAika() + "|" + 
+                    getOhje().replaceAll("\\n", "_");
+    }
+    
+    /**
+     * Selvittää reseptin tiedot tolppaerotellusta merkkijonosta
+     * @param rivi käsiteltävä rivi
+     * @example
+     * <pre name="test">
+     *   Resepti mikropitsa = new Resepti();
+     *   mikropitsa.parse("1|Mikropitsa|2 min| Laita mikropitsa mikroon.");
+     *   mikropitsa.toString().startsWith("1|Mikropitsa|2 min") === true;
+     *   mikropitsa.rekisteroi();
+     *   int n = mikropitsa.getReseptiId();
+     *   mikropitsa.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
+     *   mikropitsa.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
+     *   mikropitsa.getReseptiId() === n+20+1;
+     * </pre>  
+     */
+    public void parse(String rivi) {
+        StringBuilder sb = new StringBuilder(rivi);
+        setReseptiId(Mjonot.erota(sb, '|', getReseptiId()));
+        reseptiNimi = Mjonot.erota(sb, '|', getNimi());
+        reseptiAika = Mjonot.erota(sb, '|', getAika());
+        reseptiOhje = Mjonot.erota(sb, '|', getOhje());
+    }
+    
+    /**
+     * @return ovatko reseptit samat
+     */
+    @Override
+    public boolean equals(Object resepti) {
+        if (resepti == null) {
+            return false;
+        }
+        return this.toString().equals(resepti.toString());
+    }
+    
+    /**
+     * @return reseptin id
+     */
+    @Override
+    public int hashCode() {
         return reseptiId;
     }
     
