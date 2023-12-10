@@ -150,7 +150,7 @@ public class MuokkaaController implements ModalControllerInterface<Resepti>, Ini
     private Resepti reseptiKohdalla;
     private RuokaVinkki rV;
     private boolean onPoistettu = false;
-    private int poistettu = 0;
+    //private int poistettu = 0;
     private Set<String> poistetutAinesosat = new HashSet<>();
     private Map<Integer, String[]> uudetAinesosat = new HashMap<>();
     
@@ -202,7 +202,7 @@ public class MuokkaaController implements ModalControllerInterface<Resepti>, Ini
             gridAinesosat.getItems().remove(ainesosaI);
             // Tämä poistaisi ne myös vaikka peruuttaa
             //rV.poistaReseptinAinesosa(reseptiKohdalla, ainesosa);
-            poistettu += 1;
+            //poistettu += 1;
             gridAinesosat.refresh();
             poistetutAinesosat.add(ainesosaNimi);
             paivitaStringGrid();
@@ -294,12 +294,11 @@ public class MuokkaaController implements ModalControllerInterface<Resepti>, Ini
             for (int i = 0; i < koko; i++) {
                 String ainesosaNimi = gridAinesosat.get(i, 0);
                 if (ainesosaNimi == null || ainesosaNimi.trim().isEmpty()) {
-                    // Käydään sen verran indeksejä vielä lisää kun on poistettuja ainesosia
-                    if (poistettu > 0) {
-                        // Väliaikainen korjaus poistettujen indeksien ohitukseen
-                        koko += 1;
-                        poistettu--;
-                    }
+//                    if (poistettu > 0) {
+//                        // Väliaikainen korjaus poistettujen indeksien ohitukseen
+//                        koko += 1;
+//                        poistettu--;
+//                    }
                     continue;
                 }
                 String maara = gridAinesosat.get(i, 1);
