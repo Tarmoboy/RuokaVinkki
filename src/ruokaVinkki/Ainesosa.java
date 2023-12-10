@@ -6,7 +6,7 @@ import fi.jyu.mit.ohj2.Mjonot;
 /**
  * Luokka yksittäiselle ainesosalle
  * @author tarmo
- * @version 11.11.2023
+ * @version 10.12.2023
  * 
  */
 public class Ainesosa {
@@ -40,6 +40,13 @@ public class Ainesosa {
      */
     public String getNimi() {
         return ainesosaNimi;
+    }
+    
+    /**
+     * @param aNimi ainesosalle asetettava nimi
+     */
+    public void setNimi(String aNimi) {
+        ainesosaNimi = aNimi;
     }
     
     /**
@@ -161,9 +168,9 @@ public class Ainesosa {
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-        Ainesosa maito = new Ainesosa();
-        maito.testiAinesosa();
-        maito.rekisteroi();
-        maito.tulosta(System.out);
+//        Ainesosa maito = new Ainesosa();
+//        maito.testiAinesosa();
+//        maito.rekisteroi();
+//        maito.tulosta(System.out);
     }
 }

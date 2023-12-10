@@ -33,7 +33,7 @@
                               <Font name="Arial" size="16.0" />
                            </font>
                         </Button>
-                        <Button defaultButton="true" mnemonicParsing="false" onAction="#handleTallenna" style="-fx-base: #cc7a87;" text="Tallenna">
+                        <Button fx:id="buttonTallenna" defaultButton="true" mnemonicParsing="false" onAction="#handleTallenna" style="-fx-base: #cc7a87;" text="Tallenna">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font>
@@ -91,7 +91,7 @@
                      <GridPane.margin>
                         <Insets top="4.0" />
                      </GridPane.margin></Label>
-                  <TextField text="Nakki-juustosarvet" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
+                  <TextField fx:id="textNimi" text="Nakki-juustosarvet" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS">
                      <font>
                         <Font name="Arial" size="16.0" />
                      </font></TextField>
@@ -126,16 +126,16 @@
                         </VBox>
                      </right>
                   </BorderPane>
-                  <StringGrid editable="true" rivit="ainesosa|määrä&#10;maito|2 1/2 dl&#10;hiiva|25 g&#10;suola|1/2 rkl&#10;vehnäjauho|6 dl&#10;voi|50 g&#10;juustoraaste|75 g&#10;ketsuppi|1/2 dl&#10;sinappi|1/2 dl&#10;nakki|24 kpl&#10;kananmuna|1 kpl&#10;" style="-fx-font-size: 16 px; -fx-font-family: Arial;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <StringGrid fx:id="gridAinesosat" editable="true" rivit="ainesosa|määrä&#10;maito|2 1/2 dl&#10;hiiva|25 g&#10;suola|1/2 rkl&#10;vehnäjauho|6 dl&#10;voi|50 g&#10;juustoraaste|75 g&#10;ketsuppi|1/2 dl&#10;sinappi|1/2 dl&#10;nakki|24 kpl&#10;kananmuna|1 kpl&#10;" style="-fx-font-size: 16 px; -fx-font-family: Arial;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </StringGrid>
-                  <TextField text="1 h 30 min" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                  <TextField fx:id="textAika" text="1 h 30 min" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
                      <font>
                         <Font name="Arial" size="16.0" />
                      </font></TextField>
-                  <TextArea prefHeight="200.0" prefWidth="200.0" text="Liuota hiiva kädenlämpöiseen maitoon. Lisää suola, vehnäjauho, voi ja juustoraaste. Vaivaa tasaiseksi taikinaksi, ja anna kohota. Jaa kohonnut taikina kolmeen palaan. Kauli ne pyöreiksi, halkaisijaltaan 35 cm:n levyiksi. Jaa levyt kahdeksaan osaan. Yhdistä ketsupppi ja sinappi ja mausta seos haluamallasi tavalla. Levitä seos kolmioille ja aseta nakit kolmioiden leveämpään päähän. Kierrä ne sarviksi ja leveästä päästä aloittaen. Voitele sarvet kananmunalla ja paista 225 asteessa noin 15 min. Tarjoa lämpiminä." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <TextArea fx:id="textOhje" prefHeight="200.0" prefWidth="200.0" text="Liuota hiiva kädenlämpöiseen maitoon. Lisää suola, vehnäjauho, voi ja juustoraaste. Vaivaa tasaiseksi taikinaksi, ja anna kohota. Jaa kohonnut taikina kolmeen palaan. Kauli ne pyöreiksi, halkaisijaltaan 35 cm:n levyiksi. Jaa levyt kahdeksaan osaan. Yhdistä ketsupppi ja sinappi ja mausta seos haluamallasi tavalla. Levitä seos kolmioille ja aseta nakit kolmioiden leveämpään päähän. Kierrä ne sarviksi ja leveästä päästä aloittaen. Voitele sarvet kananmunalla ja paista 225 asteessa noin 15 min. Tarjoa lämpiminä." wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
                         <Font name="Arial" size="16.0" />
                      </font>

@@ -6,7 +6,7 @@ import java.io.*;
 /**
  * Luokka reseptien ainesosille
  * @author tarmo
- * @version 29.11.2023
+ * @version 11.12.2023
  * 
  */
 public class ReseptienAinesosat {
@@ -71,21 +71,44 @@ public class ReseptienAinesosat {
      * @param resepti poistettaviin ainesosiin liittyvä resepti
      */
     public void poista(Resepti resepti) {
-        // Uusi lista, joka yhtä pienempi
-        ReseptinAinesosa[] uusi = new ReseptinAinesosa[alkiot.length-1];
+        int poistoja = 0;
+        for (ReseptinAinesosa ainesosa : alkiot) {
+            if (ainesosa != null && ainesosa.getReseptiId() == resepti.getReseptiId()) {
+                poistoja++;
+            }
+        }
+        ReseptinAinesosa[] uusi = new ReseptinAinesosa[alkiot.length - poistoja];
         int j = 0;
         for (int i = 0; i < alkiot.length; i++) {
-            int id = alkiot[i].getReseptiId();
-            // Poistettavan reseptin ainesosan tullessa kohdalle ei lisätä uuteen listaan
-            if (id == resepti.getReseptiId()) {
-                lkm--;
+            if (alkiot[i] == null || alkiot[i].getReseptiId() == resepti.getReseptiId()) {
                 continue;
             }
-            uusi[j] = alkiot[i];
-            j++;
+            uusi[j++] = alkiot[i];
         }
-        this.alkiot = uusi;
+        alkiot = uusi;
+        lkm -= poistoja;
         muutettu = true;
+    }
+    
+    /**
+     * Poistaa reseptistä tietyn ainesosan
+     * @param reseptiId käsiteltävä resepti
+     * @param ainesosaId poistettavan ainesosan id
+     */
+    public void poistaReseptinAinesosa(int reseptiId, int ainesosaId) {
+        for (int i = 0; i < lkm; i++) {
+            if (alkiot[i].getReseptiId() == reseptiId && alkiot[i].getAinesosaId() == ainesosaId) {
+                // Poistetaan ainesosa siirtämällä loput yhdellä vasemmalle
+                for (int j = i; j < lkm - 1; j++) {
+                    alkiot[j] = alkiot[j + 1];
+                }
+                lkm--;
+                // Viimeinen alkio nulliksi
+                alkiot[lkm] = null;
+                muutettu = true;
+                break;
+            }
+        }
     }
     
     /**
@@ -196,23 +219,23 @@ public class ReseptienAinesosat {
      * @param args ei käytössä
      */
     public static void main(String args[]) {
-        ReseptienAinesosat reseptienAinesosat = new ReseptienAinesosat();
-        ReseptinAinesosa maito = new ReseptinAinesosa();
-        maito.testiReseptinAinesosa();
-        ReseptinAinesosa hiiva = new ReseptinAinesosa();
-        try {
-            reseptienAinesosat.lisaa(maito);
-            System.out.println(reseptienAinesosat.getLkm());
-            reseptienAinesosat.lisaa(hiiva);
-            System.out.println(reseptienAinesosat.getLkm());
-            System.out.println("============= ReseptinAinesosat testi =================");
-            for (int i = 0; i < reseptienAinesosat.getLkm(); i++) {
-                ReseptinAinesosa reseptinAinesosa = reseptienAinesosat.anna(i);
-                System.out.println(" Resepti nro: " + i);
-                reseptinAinesosa.tulosta(System.out);
-            }
-        } catch (SailoException ex) {
-            System.out.println(ex.getMessage());
-        }
+//        ReseptienAinesosat reseptienAinesosat = new ReseptienAinesosat();
+//        ReseptinAinesosa maito = new ReseptinAinesosa();
+//        maito.testiReseptinAinesosa();
+//        ReseptinAinesosa hiiva = new ReseptinAinesosa();
+//        try {
+//            reseptienAinesosat.lisaa(maito);
+//            System.out.println(reseptienAinesosat.getLkm());
+//            reseptienAinesosat.lisaa(hiiva);
+//            System.out.println(reseptienAinesosat.getLkm());
+//            System.out.println("============= ReseptienAinesosat testi =================");
+//            for (int i = 0; i < reseptienAinesosat.getLkm(); i++) {
+//                ReseptinAinesosa reseptinAinesosa = reseptienAinesosat.anna(i);
+//                System.out.println(" Resepti nro: " + i);
+//                reseptinAinesosa.tulosta(System.out);
+//            }
+//        } catch (SailoException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 }

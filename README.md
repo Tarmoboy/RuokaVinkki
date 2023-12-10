@@ -192,7 +192,7 @@ Avaa ikkunan, jossa on mainittu tietoja ohjelmasta, esimerkiksi versio ja tekij√
 ## ReseptinAinesosa-luokka (ReseptinAinesosa)
 ```
 |------------------------------------------------------------------------|
-| Luokan nimi: ReseptinAinesosa                     | Avustajat:        |
+| Luokan nimi: ReseptinAinesosa                      | Avustajat:        |
 |-------------------------------------------------------------------------
 | Vastuualueet:                                      |                   |
 |                                                    |                   |

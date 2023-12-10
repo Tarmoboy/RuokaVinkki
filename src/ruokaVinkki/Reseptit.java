@@ -6,14 +6,21 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import fi.jyu.mit.ohj2.WildChars;
 
 /**
  * Luokka resepteille
  * @author tarmo
- * @version 29.11.2023
+ * @version 12.12.2023
  *
  */
-public class Reseptit {
+public class Reseptit implements Iterable<Resepti> {
     private static int MAX_RESEPTEJA = 5;
     private int lkm = 0;
     private static String tiedostonSijainti = "data/reseptit.dat";
@@ -70,14 +77,35 @@ public class Reseptit {
     }
     
     /**
+     * Korvataan olemassaoleva resepti tai lisätään uusi
+     * @param resepti korvattava tai lisättävä resepti
+     * @throws SailoException jos tietorakenne on täynnä
+     */
+    public void korvaaTaiLisaa(Resepti resepti) throws SailoException {
+        int id = resepti.getReseptiId();
+        for (int i = 0; i < lkm; i++) {
+            if (alkiot[i].getReseptiId() == id) {
+                alkiot[i] = resepti;
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(resepti);
+    }
+    
+    /**
      * Poistaa reseptin tietorakenteesta
      * @param resepti poistettava resepti
      */
     public void poista(Resepti resepti) {
+        // Varmistetaan, että annettu resepti ei ole null
+        if (resepti == null) return; 
         // Uusi lista, joka yhtä pienempi
         Resepti[] uusi = new Resepti[alkiot.length-1];
         int j = 0;
         for (int i = 0; i < alkiot.length; i++) {
+            // Ohitetaan null-arvot
+            if (alkiot[i] == null) continue; 
             int id = alkiot[i].getReseptiId();
             // Poistettavan reseptin tullessa kohdalle ei lisätä uuteen listaan
             if (id == resepti.getReseptiId()) {
@@ -92,6 +120,25 @@ public class Reseptit {
     }
     
     /**
+     * Palauttaa hakoehtoa vastaavat reseptit, etsitään nimen perusteella
+     * @param hakuehto reseptien etsimiseen käytettävä hakuehto
+     * @return löydetyt reseptit
+     */
+    public Collection<Resepti> etsi(String hakuehto) {
+        String ehto = "*";
+        if (hakuehto != null && hakuehto.length() > 0) {
+            ehto = hakuehto;
+        }
+        Set<Resepti> loytyneet = new HashSet<>();
+        for (Resepti resepti : this) {
+            if (resepti != null && WildChars.onkoSamat(resepti.getNimi(), ehto)) {
+                loytyneet.add(resepti);
+            }
+        }
+        return loytyneet;
+    }
+    
+    /**
      * Palauttaa viitteen i:teen reseptiin
      * @param i monennenko reseptin viite halutaan
      * @return viite reseptiin, jonka id on i
@@ -100,6 +147,27 @@ public class Reseptit {
     public Resepti anna(int i) throws IndexOutOfBoundsException {
         if (i < 0 || lkm <= i) throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
         return alkiot[i];
+    }
+    
+    /**
+     * @return kaikki reseptit
+     */
+    public Resepti[] annaKaikki() {
+        return Arrays.copyOf(alkiot, lkm);
+    }
+    
+    /**
+     * Etsii ja palauttaa reseptin annetulla reseptiId:llä.
+     * @param reseptiId haettavan reseptin id
+     * @return löydetty resepti, tai null jos reseptiä ei löydy
+     */
+    public Resepti haeReseptiIdlla(int reseptiId) {
+        for (Resepti resepti : alkiot) {
+            if (resepti != null && resepti.getReseptiId() == reseptiId) {
+                return resepti;
+            }
+        }
+        return null;
     }
     
     /**
@@ -154,27 +222,75 @@ public class Reseptit {
     }
     
     /**
+     * Reseptien iterointia varten
+     */
+    public class ReseptitIterator implements Iterator<Resepti> {
+        private int kohdalla = 0;
+
+        /**
+         * Onko olemassa vielä seuraavaa reseptiä
+         * @see java.util.Iterator#hasNext()
+         * @return true jos on vielä reseptejä
+         */
+        @Override
+        public boolean hasNext() {
+            return kohdalla < getLkm();
+        }
+
+
+        /**
+         * Annetaan seuraava resepti
+         * @return seuraava resepti
+         * @throws NoSuchElementException jos seuraava alkiota ei enää ole
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public Resepti next() throws NoSuchElementException {
+            if (!hasNext()) {
+                throw new NoSuchElementException("Ei ole");
+            }
+            return anna(kohdalla++);
+        }
+
+
+        /**
+         * Tuhoamista ei ole toteutettu
+         * @throws UnsupportedOperationException aina
+         * @see java.util.Iterator#remove()
+         */
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Ei poisteta");
+        }
+    }
+    
+    @Override
+    public Iterator<Resepti> iterator() {
+            return new ReseptitIterator();
+    }
+    
+    /**
      * Testiohjelma resepteille
      * @param args ei käytössä
      */
     public static void main(String args[]) {
-        Reseptit reseptit = new Reseptit();
-        Resepti nakkijuustosarvet = new Resepti();
-        nakkijuustosarvet.rekisteroi();
-        nakkijuustosarvet.testiResepti();
-        Resepti makaroni = new Resepti();
-        makaroni.rekisteroi();
-        try {
-            reseptit.lisaa(nakkijuustosarvet);
-            reseptit.lisaa(makaroni);
-            System.out.println("============= Reseptit testi =================");
-            for (int i = 0; i < reseptit.getLkm(); i++) {
-                Resepti resepti = reseptit.anna(i);
-                System.out.println("  Resepti nro: " + i);
-                resepti.tulosta(System.out);
-            }
-        } catch (SailoException ex) {
-            System.out.println(ex.getMessage());
-        }
+//        Reseptit reseptit = new Reseptit();
+//        Resepti nakkijuustosarvet = new Resepti();
+//        nakkijuustosarvet.rekisteroi();
+//        nakkijuustosarvet.testiResepti();
+//        Resepti makaroni = new Resepti();
+//        makaroni.rekisteroi();
+//        try {
+//            reseptit.lisaa(nakkijuustosarvet);
+//            reseptit.lisaa(makaroni);
+//            System.out.println("============= Reseptit testi =================");
+//            for (int i = 1; i < reseptit.getLkm(); i++) {
+//                Resepti resepti = reseptit.anna(i);
+//                System.out.println("  Resepti nro: " + i);
+//                resepti.tulosta(System.out);
+//            }
+//        } catch (SailoException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 }

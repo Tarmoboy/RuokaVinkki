@@ -3,24 +3,23 @@ package fxRuokaVinkki;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.StringGrid;
 
 import java.awt.Desktop;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Collection;
 
 import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
@@ -34,7 +33,7 @@ import ruokaVinkki.SailoException;
 
 /**
  * @author tarmo
- * @version 29.11.2023
+ * @version 11.12.2023
  *
  */
 public class RuokaVinkkiGUIController implements Initializable {
@@ -58,7 +57,8 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     @FXML 
     private void handleMuokkaaReseptia() {
-        ModalController.showModal(RuokaVinkkiGUIController.class.getResource("MuokkaaView.fxml"), "Resepti", null, "");
+        //ModalController.showModal(RuokaVinkkiGUIController.class.getResource("MuokkaaView.fxml"), "Resepti", null, "");
+        muokkaa();
     }
     
     /**
@@ -91,10 +91,7 @@ public class RuokaVinkkiGUIController implements Initializable {
      */
     @FXML
     private void handleHakuehto() {
-        //hae(0);
-        Dialogs.showMessageDialog("Ei osata vielä hakea",
-                dlg -> 
-                    dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+        hae(0);
     }
     
     /**
@@ -166,13 +163,15 @@ public class RuokaVinkkiGUIController implements Initializable {
     }
     
     /**
-     * Tekee tarvittavat muut alustukset, tulostetaan reseptin tiedot 
-     * ohje-kenttään ja alustetaan myös reseptilistan kuuntelija
+     * Tekee tarvittavat muut alustukset, alustetaan 
+     * reseptilistan kuuntelija
      */
     protected void alusta() {
-        textOhje.setFont(new Font("Arial", 16));
-        textOhje.setWrapText(true);
+        tableResepti.setPlaceholder(new Label("Ei vielä ainesosia"));
         chooserReseptit.clear();
+        tableResepti.clear();
+        textOhje.setText("");
+        textAika.setText("");
         chooserReseptit.addSelectionListener(e -> naytaResepti());
     }
     
@@ -185,9 +184,9 @@ public class RuokaVinkkiGUIController implements Initializable {
         textOhje.setText("");
         tableResepti.clear();
         tulosta();
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(textOhje)) {
-            tulosta(os, reseptiKohdalla);  
-        }
+//        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(textOhje)) {
+//            tulosta(os, reseptiKohdalla);  
+//        }
     }
     
     /**
@@ -195,38 +194,115 @@ public class RuokaVinkkiGUIController implements Initializable {
      * @param reseptiId reseptin viite, joka aktivoidaan haun jälkeen
      */
     protected void hae(int reseptiId) {
-        chooserReseptit.clear();
-        tableResepti.clear();
-        int index = 0;
-        for (int i = 0; i < ruokaVinkki.getResepteja(); i++) {
-            Resepti resepti = ruokaVinkki.annaResepti(i);
-            if (resepti.getReseptiId() == reseptiId) index = i;
-            chooserReseptit.add(resepti.getNimi(), resepti);
+//        chooserReseptit.clear();
+//        tableResepti.clear();
+//        int index = 0;
+//        for (int i = 0; i < ruokaVinkki.getResepteja(); i++) {
+//            Resepti resepti = ruokaVinkki.annaResepti(i);
+//            if (resepti.getReseptiId() == reseptiId) index = i;
+//            chooserReseptit.add(resepti.getNimi(), resepti);
+//        }
+//        chooserReseptit.setSelectedIndex(index);
+        if (reseptiId <= 0) {
+            int rId = reseptiId;
+            Resepti kohdalla = reseptiKohdalla;
+            if (kohdalla != null) {
+                rId = kohdalla.getReseptiId();
+            }
+            int kentta = cbKentta.getSelectionModel().getSelectedIndex();
+            String ehto = hakuehto.getText();
+            if (ehto.indexOf("*") < 0) {
+                ehto = "*" + ehto + "*";
+            }
+            chooserReseptit.clear();
+            int index = 0;
+            Collection<Resepti> reseptit;
+            try {
+                reseptit = ruokaVinkki.etsi(ehto, kentta);
+                int i = 0;
+                for (Resepti resepti: reseptit) {
+                    if (resepti.getReseptiId() == rId) {
+                        index = i;
+                    }
+                    chooserReseptit.add(resepti.getNimi(), resepti);
+                    i++;
+                }
+            } catch (SailoException ex) {
+                Dialogs.showMessageDialog("Ongelmia reseptihaussa: " + ex.getMessage(),
+                        dlg -> dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+            }
+            chooserReseptit.setSelectedIndex(index);
         }
-        chooserReseptit.setSelectedIndex(index);
     }
 
     /**
      * Luo uuden reseptin, jota aletaan editoimaan 
      */
-    protected void uusiResepti() {
-        Resepti uusiR = new Resepti();
-        uusiR.rekisteroi();
-        uusiR.testiResepti();
-        Ainesosa uusiA = new Ainesosa();
-        uusiA.rekisteroi();
-        uusiA.testiAinesosa();
-        ReseptinAinesosa uusiRA = new ReseptinAinesosa();
-        uusiRA.testiReseptinAinesosa();
+    private void uusiResepti() {
+//        Resepti uusiR = new Resepti();
+//        uusiR.rekisteroi();
+//        uusiR.testiResepti();
+//        Ainesosa uusiA = new Ainesosa();
+//        uusiA.rekisteroi();
+//        uusiA.testiAinesosa();
+//        ReseptinAinesosa uusiRA = new ReseptinAinesosa();
+//        uusiRA.testiReseptinAinesosa();
+//        try {
+//            ruokaVinkki.lisaa(uusiR);
+//            ruokaVinkki.lisaa(uusiA);
+//            ruokaVinkki.lisaa(uusiRA);
+//        } catch (SailoException e) {
+//            Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
+//            return;
+//        }
+//        hae(uusiRA.getReseptiId());
         try {
-            ruokaVinkki.lisaa(uusiR);
-            ruokaVinkki.lisaa(uusiA);
-            ruokaVinkki.lisaa(uusiRA);
-        } catch (SailoException e) {
-            Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
+            Resepti uusiR = new Resepti();
+            uusiR.rekisteroi();
+            uusiR = MuokkaaController.muokkaa(null, uusiR.clone(), ruokaVinkki);
+            if (uusiR.getNimi() == null) {
+                return;
+            }
+            //ruokaVinkki.lisaa(uusiR);
+            hae(0); 
+        } catch (CloneNotSupportedException e) { 
+            // 
+        }
+//        } catch (SailoException e) {
+//            Dialogs.showMessageDialog("Ongelmia uuden reseptin luomisessa: " + e.getMessage(),
+//                    dlg -> dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+//        }
+    }
+    
+    /**
+     * Siirtyy muokkaamaan valittua reseptiä
+     */
+    private void muokkaa() {
+        if (reseptiKohdalla == null) {
             return;
         }
-        hae(uusiRA.getReseptiId());
+        try { 
+            Stage muokkaaStage = new Stage();
+            Resepti resepti; 
+            resepti = MuokkaaController.muokkaa(muokkaaStage, reseptiKohdalla.clone(), ruokaVinkki);     
+            if (resepti == null) {
+                // Jos resepti on poistettu, haetaan kaikki reseptit uudelleen
+                chooserReseptit.clear();
+                tableResepti.clear();
+                textOhje.setText("");
+                textAika.setText("");
+                hae(0);
+                return;
+            }
+            ruokaVinkki.korvaaTaiLisaa(resepti);
+            //hae(resepti.getReseptiId());
+            hae(0);
+        } catch (CloneNotSupportedException e) { 
+            // 
+        } catch (SailoException e) { 
+            Dialogs.showMessageDialog("Ongelmia reseptin muokkaamisessa: " + e.getMessage(),
+                    dlg -> dlg.getDialogPane().getStylesheets().add(getClass().getResource("ruokavinkki.css").toExternalForm()));
+        } 
     }
 
     /**
@@ -243,7 +319,7 @@ public class RuokaVinkkiGUIController implements Initializable {
     private void tulosta() {
         tableResepti.clear();
         textAika.setText(reseptiKohdalla.getAika());
-        //textOhje.setText(reseptiKohdalla.getOhje().replaceAll("_", "\n"));
+        textOhje.setText(reseptiKohdalla.getOhje());
         for (int i = 0; i < ruokaVinkki.getReseptienAinesosia(); i++) {
             ReseptinAinesosa reseptinAinesosa = ruokaVinkki.annaReseptinAinesosa(i);
             // Jos reseptin id täsmää, siirrytään eteenpäin

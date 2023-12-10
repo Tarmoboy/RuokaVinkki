@@ -1,6 +1,5 @@
 package ruokaVinkki;
 
-import java.io.*;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import fi.jyu.mit.ohj2.Mjonot;
@@ -8,10 +7,10 @@ import fi.jyu.mit.ohj2.Mjonot;
 /**
  * Luokka yksittäiselle reseptille
  * @author tarmo
- * @version 29.11.2023
+ * @version 10.12.2023
  *
  */
-public class Resepti {
+public class Resepti implements Cloneable {
     private int reseptiId;
     private String reseptiNimi = "";
     private String reseptiAika = "";
@@ -52,6 +51,27 @@ public class Resepti {
      */
     public String getOhje() {
         return reseptiOhje;
+    }
+    
+    /**
+     * @param nimi reseptille asetettava nimi
+     */
+    public void setNimi(String nimi) {
+        reseptiNimi = nimi;
+    }
+    
+    /**
+     * @param aika reseptille asetettava aika
+     */
+    public void setAika(String aika) {
+        reseptiAika = aika;
+    }
+    
+    /**
+     * @param ohje reseptille asetettava ohje
+     */
+    public void setOhje(String ohje) {
+        reseptiOhje = ohje;
     }
     
     /**
@@ -123,7 +143,7 @@ public class Resepti {
         setReseptiId(Mjonot.erota(sb, '|', getReseptiId()));
         reseptiNimi = Mjonot.erota(sb, '|', getNimi());
         reseptiAika = Mjonot.erota(sb, '|', getAika());
-        reseptiOhje = Mjonot.erota(sb, '|', getOhje());
+        reseptiOhje = Mjonot.erota(sb, '|', getOhje()).replaceAll("_", "\\n");
     }
     
     /**
@@ -143,6 +163,17 @@ public class Resepti {
     @Override
     public int hashCode() {
         return reseptiId;
+    }
+    
+    /**
+     * Identtisen kloonin luominen reseptistä
+     * @return kloonattu resepti
+     */
+    @Override
+    public Resepti clone() throws CloneNotSupportedException {
+        Resepti uusiR;
+        uusiR = (Resepti) super.clone();
+        return uusiR;
     }
     
     /**
@@ -179,13 +210,13 @@ public class Resepti {
      * @param args ei käytössä
      */
     public static void main(String args[]) {
-        Resepti nakkijuustosarvet = new Resepti();
-        nakkijuustosarvet.rekisteroi();
-        nakkijuustosarvet.tulosta(System.out);
-        nakkijuustosarvet.testiResepti();
-        nakkijuustosarvet.tulosta(System.out);
-        Resepti makaroni = new Resepti();
-        makaroni.rekisteroi();
-        makaroni.tulosta(System.out);
+//        Resepti nakkijuustosarvet = new Resepti();
+//        nakkijuustosarvet.rekisteroi();
+//        nakkijuustosarvet.tulosta(System.out);
+//        nakkijuustosarvet.testiResepti();
+//        nakkijuustosarvet.tulosta(System.out);
+//        Resepti makaroni = new Resepti();
+//        makaroni.rekisteroi();
+//        makaroni.tulosta(System.out);
     }
 }

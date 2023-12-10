@@ -6,14 +6,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import fi.jyu.mit.ohj2.WildChars;
 
 /**
  * Luokka ainesosille
  * @author tarmo
- * @version 29.11.2023
+ * @version 10.12.2023
  *
  */
-public class Ainesosat {
+public class Ainesosat implements Iterable<Ainesosa> {
     private static String tiedostonSijainti = "data/ainesosat.dat";
     private ArrayList<Ainesosa> alkiot = new ArrayList<Ainesosa>();
     private static boolean muutettu = false;
@@ -37,6 +38,7 @@ public class Ainesosat {
      * @param ainesosa lisättävä ainesosa
      */
     public void lisaa(Ainesosa ainesosa) {
+        if (ainesosa == null) return;
         alkiot.add(ainesosa);
         muutettu = true;
     }
@@ -48,6 +50,26 @@ public class Ainesosat {
     public void poista(Ainesosa ainesosa) {
         alkiot.remove(ainesosa);
         muutettu = true;
+    }
+    
+    /**
+     * Palauttaa hakoehtoa vastaavat ainesosat, etsitään nimen perusteella
+     * @param hakuehto ainesosat etsimiseen käytettävä hakuehto
+     * @return löydetyt ainesosat
+     */
+    public Collection<Ainesosa> etsi(String hakuehto) {
+        String ehto = "*";
+        if (hakuehto != null && hakuehto.length() > 0) {
+            ehto = hakuehto;
+        }
+        // HashSet duplikaattien eliminoimiseksi
+        Set<Ainesosa> loytyneet = new HashSet<>();
+        for (Ainesosa ainesosa : this) {
+            if (ainesosa != null && WildChars.onkoSamat(ainesosa.getNimi(), ehto)) {
+                loytyneet.add(ainesosa);
+            }
+        }
+        return loytyneet;
     }
     
     /**
@@ -133,22 +155,30 @@ public class Ainesosat {
     }
     
     /**
+     * Iteraattori
+     */
+    @Override
+    public Iterator<Ainesosa> iterator() {
+            return alkiot.iterator();
+    }
+    
+    /**
      * Testiohjelma ainesosille
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-        Ainesosat ainesosat = new Ainesosat();
-        Ainesosa maito = new Ainesosa(1); 
-        Ainesosa hiiva = new Ainesosa(2); 
-        maito.testiAinesosa();
-        ainesosat.lisaa(maito);
-        ainesosat.lisaa(hiiva);
-        System.out.println("============= Ainesosat testi =================");
-        int[] reseptinAinesosat = {1, 2};
-        List<Ainesosa> ainesosat2 = ainesosat.annaAinesosat(reseptinAinesosat);
-        for (Ainesosa ainesosa : ainesosat2) {
-            System.out.println("Ainesosa nro: " + ainesosa.getAinesosaId());
-            ainesosa.tulosta(System.out);
-        }
+//        Ainesosat ainesosat = new Ainesosat();
+//        Ainesosa maito = new Ainesosa(1); 
+//        Ainesosa hiiva = new Ainesosa(2); 
+//        maito.testiAinesosa();
+//        ainesosat.lisaa(maito);
+//        ainesosat.lisaa(hiiva);
+//        System.out.println("============= Ainesosat testi =================");
+//        int[] reseptinAinesosat = {1, 2};
+//        List<Ainesosa> ainesosat2 = ainesosat.annaAinesosat(reseptinAinesosat);
+//        for (Ainesosa ainesosa : ainesosat2) {
+//            System.out.println("Ainesosa nro: " + ainesosa.getAinesosaId());
+//            ainesosa.tulosta(System.out);
+//        }
     }
 }

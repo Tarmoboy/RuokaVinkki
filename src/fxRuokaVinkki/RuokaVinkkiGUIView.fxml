@@ -58,7 +58,7 @@
                               <Font name="Arial" size="16.0" />
                            </font></Label>
                         <ComboBoxChooser fx:id="cbKentta" onAction="#handleHakuehto" prefHeight="25.0" prefWidth="9000.0" rivit="ainesosa&#10;reseptin nimi" style="-fx-font-size: 16 px; -fx-font-family: Arial;" />
-                        <TextField fx:id="hakuehto">
+                        <TextField fx:id="hakuehto" onKeyReleased="#handleHakuehto">
                            <font>
                               <Font name="Arial" size="16.0" />
                            </font></TextField>

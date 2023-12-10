@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * RuokaVinkki-luokka, huolehtii resepteistä
  * @author tarmo
- * @version 29.11.2023
+ * @version 11.12.2023
  *
  */
 public class RuokaVinkki {
@@ -35,13 +35,10 @@ public class RuokaVinkki {
     }
     
     /**
-     * Poistaa resepteistä ja reseptien ainesosista ne joilla on kyseinen id
-     * TODO toteuttamatta
-     * @param id viitenumero, jonka mukaan poistetaan
-     * @return montako reseptiä poistettiin
+     * @return ainesosat
      */
-    public int poista(@SuppressWarnings("unused") int id) {
-        return 0;
+    public Ainesosat getAinesosat() {
+        return ainesosat;
     }
     
     /**
@@ -71,6 +68,15 @@ public class RuokaVinkki {
     }
     
     /**
+     * Korvataanko olemassaoleva resepti vai lisätäänkö uusi
+     * @param resepti tarkasteltava resepti
+     * @throws SailoException epäonnistuessa
+     */
+    public void korvaaTaiLisaa(Resepti resepti) throws SailoException {
+        reseptit.korvaaTaiLisaa(resepti);
+    }
+    
+    /**
      * Poistaa reseptin ja siihen linkitetyt ainesosarivit
      * @param resepti poistettava resepti
      */
@@ -81,6 +87,82 @@ public class RuokaVinkki {
         }
         reseptienAinesosat.poista(resepti);
         reseptit.poista(resepti);
+    }
+    
+    /**
+     * Poistaa reseptiin linkitetyt ainesosat
+     * @param resepti käsiteltävä resepti
+     */
+    public void poistaReseptinAinesosat(Resepti resepti) {
+        reseptienAinesosat.poista(resepti);
+    }
+    
+    /**
+     * Poistaa reseptiin linkitetyn tietyn ainesosan
+     * @param resepti käsiteltävä resepti
+     * @param ainesosa poistettava ainesosa
+     */
+    public void poistaReseptinAinesosa(Resepti resepti, Ainesosa ainesosa) {
+        int reseptiId = resepti.getReseptiId();
+        int ainesosaId = ainesosa.getAinesosaId();
+        reseptienAinesosat.poistaReseptinAinesosa(reseptiId, ainesosaId);
+    }
+    
+    /**
+     * @param hakuehto käytettävä hakuehto
+     * @param kentta indeksi käytettävälle kentälle
+     * @return löydetyt reseptit
+     * @throws SailoException epäonnistuessa
+     */
+    public Collection<Resepti> etsi(String hakuehto, int kentta) throws SailoException {
+        // Jos kentän id on 0, etsitään ainesosien nimien mukaan
+        if (kentta == 0) {
+            if (hakuehto == null || hakuehto.isEmpty() || hakuehto.equals("**")) {
+                // Jos hakuehto on tyhjä tai "**", palautetaan kaikki reseptit
+                return new ArrayList<>(Arrays.asList(reseptit.annaKaikki()));
+            }
+            // Etsitään ensin kaikki hakuehtoa vastaavat ainesosat
+            Collection<Ainesosa> loytyneetAinesosat = ainesosat.etsi(hakuehto);
+            //System.out.println(loytyneetAinesosat);
+            // Sitten näitä ainesosia vastaavat uniikit id:t
+            Set<Integer> ainesosaIdt = new HashSet<>();
+            for (Ainesosa ainesosa : loytyneetAinesosat) {
+                ainesosaIdt.add(ainesosa.getAinesosaId());
+            }
+            //System.out.println(ainesosaIdt);
+            // Sitten etsitään kaikki reseptit, jotka sisältävät jonkun näistä ainesosien id:stä
+            Set<Resepti> loytyneet = new HashSet<>();
+            for (int i = 0; i < reseptienAinesosat.getLkm(); i++) {
+                ReseptinAinesosa ra = reseptienAinesosat.anna(i);
+                //System.out.println(reseptienAinesosat.anna(i));
+                if (ainesosaIdt.contains(ra.getAinesosaId())) {
+                    //System.out.println(reseptit.anna(ra.getReseptiId()));
+                    //System.out.println(reseptit.anna(ra.getReseptiId()));
+                    Resepti resepti = reseptit.haeReseptiIdlla(ra.getReseptiId());
+                    //System.out.println(reseptit.anna(ra.getReseptiId()));
+                    if (resepti != null) {
+                        loytyneet.add(resepti);
+                    }
+                }
+            }
+            return loytyneet;
+        }
+        // Muuten etsitään reseptien nimien mukaan
+        return reseptit.etsi(hakuehto);
+    }
+    
+    /**
+     * Hakee ainesosan annetulla nimellä
+     * @param nimi ainesosan nimi
+     * @return löydetty ainesosa tai null jos ei löydy
+     */
+    public Ainesosa haeAinesosaNimella(String nimi) {
+        for (Ainesosa ainesosa : ainesosat) {
+            if (ainesosa.getNimi().equalsIgnoreCase(nimi)) {
+                return ainesosa;
+            }
+        }
+        return null;
     }
     
     /**
@@ -194,39 +276,39 @@ public class RuokaVinkki {
      * @param args ei käytössä
      */
     public static void main(String args[]) {
-        RuokaVinkki ruokaVinkki = new RuokaVinkki();
-        try {
-            // ruokaVinkki.lueTiedostosta("data");
-            Resepti nakkijuustosarvet = new Resepti();
-            Resepti makaroni = new Resepti();
-            nakkijuustosarvet.rekisteroi();
-            nakkijuustosarvet.testiResepti();
-            makaroni.rekisteroi();
-            ruokaVinkki.lisaa(nakkijuustosarvet);
-            ruokaVinkki.lisaa(makaroni);
-            Ainesosa maito = new Ainesosa();
-            maito.rekisteroi();
-            maito.testiAinesosa();
-            Ainesosa hiiva = new Ainesosa();
-            hiiva.rekisteroi();
-            ruokaVinkki.lisaa(maito);
-            ruokaVinkki.lisaa(hiiva);
-            ReseptinAinesosa maitoLiitettyna = new ReseptinAinesosa();
-            maitoLiitettyna.testiReseptinAinesosa();
-            ruokaVinkki.lisaa(maitoLiitettyna);
-            System.out.println("============= RuokaVinkki testi =================");
-            for (int i = 0; i < ruokaVinkki.getResepteja(); i++) {
-                Resepti resepti = ruokaVinkki.annaResepti(i);
-                System.out.println("  Resepti nro: " + i);
-                resepti.tulosta(System.out);
-                int[] ainesosaIdt = ruokaVinkki.reseptienAinesosat.annaReseptinAinesosat(resepti.getReseptiId());
-                for (int ainesosaId : ainesosaIdt) {
-                    Ainesosa ainesosa = ruokaVinkki.annaAinesosa(ainesosaId);
-                    ainesosa.tulosta(System.out);
-                } 
-            }
-        } catch (SailoException ex) {
-            System.out.println(ex.getMessage());
-        }
+//        RuokaVinkki ruokaVinkki = new RuokaVinkki();
+//        try {
+//            // ruokaVinkki.lueTiedostosta("data");
+//            Resepti nakkijuustosarvet = new Resepti();
+//            Resepti makaroni = new Resepti();
+//            nakkijuustosarvet.rekisteroi();
+//            nakkijuustosarvet.testiResepti();
+//            makaroni.rekisteroi();
+//            ruokaVinkki.lisaa(nakkijuustosarvet);
+//            ruokaVinkki.lisaa(makaroni);
+//            Ainesosa maito = new Ainesosa();
+//            maito.rekisteroi();
+//            maito.testiAinesosa();
+//            Ainesosa hiiva = new Ainesosa();
+//            hiiva.rekisteroi();
+//            ruokaVinkki.lisaa(maito);
+//            ruokaVinkki.lisaa(hiiva);
+//            ReseptinAinesosa maitoLiitettyna = new ReseptinAinesosa();
+//            maitoLiitettyna.testiReseptinAinesosa();
+//            ruokaVinkki.lisaa(maitoLiitettyna);
+//            System.out.println("============= RuokaVinkki testi =================");
+//            for (int i = 0; i < ruokaVinkki.getResepteja(); i++) {
+//                Resepti resepti = ruokaVinkki.annaResepti(i);
+//                System.out.println("  Resepti nro: " + i);
+//                resepti.tulosta(System.out);
+//                int[] ainesosaIdt = ruokaVinkki.reseptienAinesosat.annaReseptinAinesosat(resepti.getReseptiId());
+//                for (int ainesosaId : ainesosaIdt) {
+//                    Ainesosa ainesosa = ruokaVinkki.annaAinesosa(ainesosaId);
+//                    ainesosa.tulosta(System.out);
+//                } 
+//            }
+//        } catch (SailoException ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
 }

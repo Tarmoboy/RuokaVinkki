@@ -6,7 +6,7 @@ import fi.jyu.mit.ohj2.Mjonot;
 /**
  * Luokka yksittäisen reseptin yksittäiselle ainesosalle
  * @author tarmo
- * @version 29.11.2023
+ * @version 10.12.2023
  * 
  */
 public class ReseptinAinesosa {
@@ -39,6 +39,27 @@ public class ReseptinAinesosa {
      */
     public String getMaara() {
         return maara;
+    }
+    
+    /**
+     * @param rId reseptille asetettava id
+     */
+    public void setReseptiId(int rId) {
+        reseptiId = rId;
+    }
+    
+    /**
+     * @param aId ainesosalle asetettava id
+     */
+    public void setAinesosaId(int aId) {
+        ainesosaId = aId;
+    }
+    
+    /**
+     * @param mr asetettava määrä
+     */
+    public void setMaara(String mr) {
+        maara = mr;
     }
     
     /**
@@ -103,8 +124,8 @@ public class ReseptinAinesosa {
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-        ReseptinAinesosa maito = new ReseptinAinesosa();
-        maito.testiReseptinAinesosa();
-        maito.tulosta(System.out);
+//        ReseptinAinesosa maito = new ReseptinAinesosa();
+//        maito.testiReseptinAinesosa();
+//        maito.tulosta(System.out);
     }
 }

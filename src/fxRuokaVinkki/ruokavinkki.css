@@ -1,26 +1,41 @@
 /* Mun määritykset */
-.virhe {
+.text-field.virhe {
+	/* @SuppressWarning */
+	-fx-control-inner-background: #ccbc52;
+}
+
+.label.virhe {
 	/* @SuppressWarning */
 	-fx-background-color: #ccbc52;
 }
-.normaali {
+
+.text-field.normaali {
 	/* @SuppressWarning */
-	-fx-background-color: inherit;
+	-fx-control-inner-background: #e9ebee;
 }
+
+.label.normaali {
+	/* @SuppressWarning */
+	-fx-background-color: #9aa0ac;
+}
+
 .button:default-button {
-	-fx-base: #cc7a89;
+	-fx-base: #cc7a87;
 }
-/* Ei toimi... apua? default-button ei ilmeisesti ole oikea, vaikka kyllä-nappi sininen onkin */
-.dialog-pane .button:default-button {
-    	-fx-base:  #cc7a87;
+
+/* Hienosti default-button eri väriseksi kuin muut */
+.dialog-pane .button:default {
+    -fx-base: #cc7a87;
+}
+
+.dialog-pane .button {
+    -fx-base: #9aa0ac; 
 }
 
 .dialog-pane {
-    	-fx-base:  #9aa0ac; 
-}
-.dialog-pane {
-	-fx-pref-width: 300px;
-    	-fx-pref-height: 200px;
+	-fx-base: #9aa0ac;
+	-fx-pref-width:300px;
+    -fx-pref-height: 200px;
 	-fx-font-family: Arial;
 	-fx-font-size: 16px;
 }
