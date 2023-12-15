@@ -1,4 +1,4 @@
-# RuokaVinkki - Tarmo Ilves
+# RuokaVinkki
 Ohjelmointi 2 syksyn 2023 harjoitustyö
 
 Nimensä mukaisesti RuokaVinkki tarjoaa ideoita ruoanlaittoa varten. Ohjelmassa on mahdollista lisätä ja muokata ruoanlaittoreseptejä, ja toki myös poistaa tarvittaessa.
